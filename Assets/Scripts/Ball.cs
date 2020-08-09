@@ -18,9 +18,11 @@ public class Ball : MonoBehaviour
     private Vector2 moveVelocity;
     private TextMeshProUGUI scoreText1;
     private TextMeshProUGUI scoreText2;
+    private TextMeshProUGUI winText;
     private int score1;
     private int score2;
     public float speed;
+    public GameObject winTextObject;
     public GameObject scoreTextObjectOne;
     public GameObject scoreTextObjectTwo;
 
@@ -30,6 +32,7 @@ public class Ball : MonoBehaviour
         sr = GetComponent<SpriteRenderer>();
         scoreText1 = scoreTextObjectOne.GetComponent<TextMeshProUGUI>();
         scoreText2 = scoreTextObjectTwo.GetComponent<TextMeshProUGUI>();
+        winText = winTextObject.GetComponent<TextMeshProUGUI>();
         rnd = new Random();
         startBall();
     }
@@ -86,12 +89,24 @@ public class Ball : MonoBehaviour
     }
 
     void FixedUpdate() {
-        if (tr.position.x < -9) {
+        if (score1 >= 11 && Mathf.Abs((float)(score1 - score2)) >= 2)
+        {
+            Time.timeScale = 0;
+            winText.text = "Red Wins!";
+            winText.color = Color.red;
+        }
+        else if (score2 >= 11 && Mathf.Abs((float)(score1 - score2)) >= 2)
+        {
+            Time.timeScale = 0;
+            winText.text = "Blue Wins!";
+            winText.color = Color.blue;
+        }
+        if (tr.position.x > 9) {
             SoundManagerScript.PlaySound("increaseScore");
             score1++;
             scoreText1.text = score1.ToString();
             RestartGame();
-        } else if (tr.position.x > 9) {
+        } else if (tr.position.x < -9) {
             SoundManagerScript.PlaySound("increaseScore");
             score2++;
             scoreText2.text = score2.ToString();
